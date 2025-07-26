@@ -37,15 +37,15 @@ export async function signInWithEmail(formData: FormData) {
   const callbackURL = getURL('/auth/callback');
 
   const email = String(formData.get('email')).trim();
-  let redirectPath: string;
-
   if (!isValidEmail(email)) {
-    redirectPath = getErrorRedirect(
+    return getErrorRedirect(
       '/signin/email_signin',
       'Invalid email address.',
       'Please try again.'
     );
   }
+
+  let redirectPath: string;
 
   const supabase = createClient();
   let options = {
@@ -91,15 +91,15 @@ export async function requestPasswordUpdate(formData: FormData) {
 
   // Get form data
   const email = String(formData.get('email')).trim();
-  let redirectPath: string;
-
   if (!isValidEmail(email)) {
-    redirectPath = getErrorRedirect(
+    return getErrorRedirect(
       '/signin/forgot_password',
       'Invalid email address.',
       'Please try again.'
     );
   }
+
+  let redirectPath: string;
 
   const supabase = createClient();
 
@@ -168,15 +168,15 @@ export async function signUp(formData: FormData) {
 
   const email = String(formData.get('email')).trim();
   const password = String(formData.get('password')).trim();
-  let redirectPath: string;
-
   if (!isValidEmail(email)) {
-    redirectPath = getErrorRedirect(
+    return getErrorRedirect(
       '/signin/signup',
       'Invalid email address.',
       'Please try again.'
     );
   }
+
+  let redirectPath: string;
 
   const supabase = createClient();
   const { error, data } = await supabase.auth.signUp({
@@ -225,16 +225,15 @@ export async function signUp(formData: FormData) {
 export async function updatePassword(formData: FormData) {
   const password = String(formData.get('password')).trim();
   const passwordConfirm = String(formData.get('passwordConfirm')).trim();
-  let redirectPath: string;
-
-  // Check that the password and confirmation match
   if (password !== passwordConfirm) {
-    redirectPath = getErrorRedirect(
+    return getErrorRedirect(
       '/signin/update_password',
       'Your password could not be updated.',
       'Passwords do not match.'
     );
   }
+
+  let redirectPath: string;
 
   const supabase = createClient();
   const { error, data } = await supabase.auth.updateUser({
